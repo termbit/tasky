@@ -9,6 +9,7 @@ AFTER_BUILD_FILES = $(PROG_NAME) main.o TaskyConfig.h.gch
 install: $(PROG_NAME) create_configs
 	@rm main.o
 
+
 create_configs:
 ifndef XDG_CONFIG_FILE
 	mkdir -p $(HOME)/.config/tasky
@@ -19,14 +20,19 @@ else
 	touch $(XDG_CONFIG_FILE)/tasky/data.json
 	touch $(XDG_CONFIG_FILE)/tasky/issued_ID.txt
 endif
-	
-	sudo ln $(PROG_NAME) /usr/bin/$(PROG_NAME)
+	test -f /usr/bin/$(PROG_NAME) && echo " - tasky существует в $$PATH" || sudo ln $(PROG_NAME) /usr/bin/$(PROG_NAME)
+
+
 
 $(PROG_NAME): main.o
 	@$(CXX) $(LFLAGS) $(PROG_NAME) main.o
 
+
+
 main.o: main.cpp
 	@$(CXX) $(CFLAGS) main.cpp TaskyConfig.h
+
+
 
 .PHONY: clean
 

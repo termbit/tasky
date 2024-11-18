@@ -24,6 +24,15 @@ execute_process(COMMAND touch "${CONFIG_DIR}/issued_ID.txt")
 
 # Добавляем в /usr/bin
 
-add_custom_command(TARGET tasky POST_BUILD COMMAND sudo ln tasky /usr/bin/tasky)
+# Проверяем, существует ли /usr/bin/tasky
+execute_process(
+    COMMAND test -e /usr/bin/tasky
+    RESULT_VARIABLE TASKY_EXISTS
+)
+
+# Если файл не существует, создаем жесткую ссылку
+if(NOT TASKY_EXISTS EQUAL 0)
+    add_custom_command(TARGET tasky POST_BUILD COMMAND sudo ln ${CMAKE_CURRENT_BINARY_DIR}/tasky /usr/bin/tasky)
+endif()
 
 target_include_directories(tasky PRIVATE ./build)
