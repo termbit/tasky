@@ -1,0 +1,2 @@
+#define TASKY_VERSION_MAJOR @tasky-task-tracker_VERSION_MAJOR@
+#define TASKY_VERSION_MINOR @tasky-task-tracker_VERSION_MINOR@

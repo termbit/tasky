@@ -1,0 +1,34 @@
+.DELETE_ON_ERROR:
+
+CXX = g++
+CFLAGS = -c
+LFLAGS = -o
+PROG_NAME = tasky
+AFTER_BUILD_FILES = $(PROG_NAME) main.o TaskyConfig.h.gch
+
+install: $(PROG_NAME) create_configs
+	@rm main.o
+
+create_configs:
+ifndef XDG_CONFIG_FILE
+	mkdir -p $(HOME)/.config/tasky
+	touch $(HOME)/.config/tasky/data.json
+	touch $(HOME)/.config/tasky/issued_ID.txt
+else
+	mkdir -p $(XDG_CONFIG_FILE)/tasky
+	touch $(XDG_CONFIG_FILE)/tasky/data.json
+	touch $(XDG_CONFIG_FILE)/tasky/issued_ID.txt
+endif
+	
+	sudo ln $(PROG_NAME) /usr/bin/$(PROG_NAME)
+
+$(PROG_NAME): main.o
+	@$(CXX) $(LFLAGS) $(PROG_NAME) main.o
+
+main.o: main.cpp
+	@$(CXX) $(CFLAGS) main.cpp TaskyConfig.h
+
+.PHONY: clean
+
+clean:
+	rm -f $(AFTER_BUILD_FILES)
