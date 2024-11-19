@@ -126,8 +126,15 @@ void help() {
     << "\"list\" command have filter types \"done\" and \"in-progress\"\n";             
 }
 
-void add_task(const char* task_description) {
-    if(!task_description) {
+void add_task(int argc, char* argv[]) {
+    std::string task_description;
+    
+    for (int x = 2; x < argc ; ++x) {
+        task_description.append(argv[x]);
+        task_description.append(" ");
+    }
+
+    if(task_description.empty()) {
         std::cout << "Please, enter a task name\n";
         return;
     }
@@ -464,7 +471,7 @@ int main(int argc, char* argv[]) {
         else
             mark_in_progress(argv[2]);
     }
-    else if (argv[1] == "add"sv)              add_task(argv[2]);
+    else if (argv[1] == "add"sv)              add_task(argc, argv);
     else if (argv[1] == "list"sv)             list_tasks(argv[2]);
     else if (argv[1] == "edit"sv) {
         if(argv[2] == NULL)
